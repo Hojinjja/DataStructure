@@ -11,6 +11,7 @@
 
 
 ### Class materials ###
+* Mar 29 Fri: Stack and Queue [\[code\]](code/Mar29)
 * Mar 27 Wed: Stack (Ch. 3( [\[code\]](code/Mar27)
 * Mar 22 Fri: Stack (Ch. 3) [\[slide\]](notes/ch3-stack-r1.pdf) [\[code\]](code/Mar22)
 * Mar 20 Wed: Stack (Ch. 3) [\[slide\]](notes/ch3-stack.pdf) [\[code\]](code/Mar20) 
@@ -20,4 +21,6 @@
 
 
 ### Assignments ###
+* Homework 2 (due: 7 PM, Apr 9 Tue): [\[desc\]](assignments/homework2/homework2.pdf) [\[code\]](assignments/homework2)
 * Homework 1 (due: 7 PM, Mar 29 Fri): [\[desc\]](assignments/homework1/homework1.pdf) [\[code\]](assignments/homework1/poly.c)
+
