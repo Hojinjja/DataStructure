@@ -21,7 +21,7 @@ int main ()
 {
 	struct person shin ;
 
-	strcpy(shin.name, "Shin Hong") ;
+	strcpy(shin.name, "Shin Hong") ; // shin.name에 "Shin Hong"문자열 복사
 	shin.age = 38 ;
 	shin.membership.type = prof ;
 	strcpy(shin.membership.office, "316 S4-1") ;

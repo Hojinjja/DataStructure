@@ -17,7 +17,7 @@ int X, Y ;
 int m[20][20] ;
 
 void
-print_map ()
+print_map () // 맵 출력하기
 {
 	int i, j ;
 
@@ -41,7 +41,7 @@ print_map ()
 	printf("\n") ;
 }
 
-void load_map(char * filename) 
+void load_map(char * filename) // 맵 로드하기 
 {
 	FILE * fp = fopen(filename, "r") ;
 	fscanf(fp, "%d %d", &X, &Y) ;
@@ -53,7 +53,7 @@ void load_map(char * filename)
 	fclose(fp) ;
 }
 
-int is_in_path(stack_t * xs, stack_t * ys, int nx, int ny)
+int is_in_path(stack_t * xs, stack_t * ys, int nx, int ny) // 이미 스택에 경로가 있는지 확인.
 {
 	int i ;
 	for (i = 0 ; i < get_size(xs) ; i++) {
@@ -66,7 +66,7 @@ int is_in_path(stack_t * xs, stack_t * ys, int nx, int ny)
 	return 0 ;
 }
 
-void search ()
+void search () // 경로 찾기 
 {
 	stack_t * xs = create_stack(400) ;
 	stack_t * ys = create_stack(400) ;
@@ -132,7 +132,7 @@ void search ()
 
 int main ()
 {
-	load_map("maze1.txt") ;
+	load_map("maze2.txt") ;
 	print_map() ;
 
 	search() ;

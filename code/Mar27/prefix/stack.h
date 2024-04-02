@@ -5,9 +5,9 @@ typedef
 		void * buffer ;
 		int unit ;
 		int capacity ;
-		int top ;
+		int size ;
 	} 
-	stack_t ; // buffer~top 등을 구조체로 정의해서 stack_t로 부르기로 함
+	stack_t ; // buffer~size 등을 구조체로 정의해서 stack_t로 부르기로 함
 
 stack_t * 
 create_stack (int capacity, int unit) ;// 스택의 크기
