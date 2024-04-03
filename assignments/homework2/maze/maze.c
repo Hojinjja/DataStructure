@@ -91,7 +91,7 @@ void search () // 경로 찾기
         
         m[y][x] = PATH;
         printf("Step %d: (%d,%d)\n", step++, y, x); // 단계 번호와 함께 경로 출력
-    }
+        }
     return ;
 }
 
