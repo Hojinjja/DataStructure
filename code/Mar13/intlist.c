@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct intlist_t {
+typedef
+	struct  {
 	int * items ;
 	int n_items ;
-} ;
+	}intlist_t;
 
 struct intlist_t * intlist_create () ;
 int intlist_size (intlist_t * l) ;

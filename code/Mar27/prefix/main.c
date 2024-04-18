@@ -7,7 +7,7 @@ typedef
 	enum { Number, Operator } 
 	token_type ;
 
-typedef  //union v 랑 token_type을 구조체로 만들어서 token_t로 만듦. 
+typedef  //union 'v' 랑 'token_type'을 구조체로 만들어서 token_t로 만듦. 
 	struct {
 		union { // 둘 중 더 큰 메모리를 할당시켜줌 (하나의 메모리에 두개의 타입을 표현)
 			int num ;  //만약 v.num하면 4byte 중 4byte 접근
@@ -34,6 +34,9 @@ print_stack (stack_t * st)
 	printf("]\n") ;
 }
 
+
+
+
 int
 main () 
 {
@@ -41,22 +44,23 @@ main ()
 	exp = create_stack(100, sizeof(token_t)) ;
 	
 	char buf[8] = { 0x0 } ;
+
 	while (!(buf[0] == ';' && get_size(exp) == 1)) {
 		print_stack(exp) ;
 
 		if (get_size(exp) >= 3) {  // 스택에 3개 이상 들어오면
-			token_t op, n1, n2 ; 
+			token_t operator, n1, n2 ; 
 		// 3개를 pop 한다 그러면 보통 순서가 숫자->숫자->연산자 이므로
 			pop(exp, &n2) ; // 스택 맨 위에 있던 숫자
 			pop(exp, &n1) ; // 그 다음에 있던 숫자
-			pop(exp, &op) ; // 그 다음에 있는 연산자
+			pop(exp, &operator) ; // 그 다음에 있는 연산자
 
-			if (n1.type == Number && n2.type == Number && op.type == Operator) {
+			if (n1.type == Number && n2.type == Number && operator.type == Operator) {
 				//꺼내온 3개가 숫자-숫자-연산자 순서면 계산을 진행
 				token_t res ;
 
 				res.type = Number ;
-				switch (op.v.op) {
+				switch (operator.v.op) {
 					case '+':
 						res.v.num = n1.v.num + n2.v.num ;
 						break ;
@@ -74,16 +78,18 @@ main ()
 				continue ;
 			}
 			else { // 만약 숫자-숫자-연산자 순서가 아니라면 아직 계산할 때가 아니므로 다시 push로 집어넣는다.
-				push(exp, &op) ;
+				push(exp, &operator) ;
 				push(exp, &n1) ;
 				push(exp, &n2) ;
 			}
 		}
 		
+
+		// < 들어온 값 확인> 
 		scanf("%7s", buf) ; //버퍼에서 하나씩 읽어드린다
 
 		if (buf[0] == ';') { // 만약 세미콜론이 읽히면 끝낸다
-			continue ;
+			break ;
 		}
 		else if (isdigit(buf[0])) { // 만약 읽어온 buf 값이 숫자라면
 			token_t tok ;

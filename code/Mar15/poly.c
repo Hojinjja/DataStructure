@@ -12,7 +12,7 @@ typedef
 	struct {
 		int degree ; //
 		int n_terms ;
-		term_t * terms ; // a list of attached terms 
+		term_t * terms ; // term_t를 poly_t의 멤버로 집어넣음. 
 	} 
 	poly_t ; // poly_t(다항식) 정의 -> degree(최고차항), n_terms(항 개수), terms(지수,계수) 
 
@@ -29,13 +29,12 @@ poly_t * poly_zero () // 다항식 초기화
 	return p ; //초기값 설정된 다항식 p 반환
 }
 
-
-
-
 int poly_degree (poly_t * p) //최고차항 구하기
 {
 	return p->degree ; // 최고차항 정의된 degree 접근해서 return
 }
+
+
 
 double poly_coef (poly_t * p, int exp) // 지수의 계수 추출하기
 {
@@ -72,8 +71,11 @@ poly_t * poly_attach (poly_t * p, double coef, int exp) // 지수,계수 입력해서 항
 		p->degree = exp ;
 	}
 
+/**********
+***중요****
+***********/
 	// terms(최고차항/항의 개수)를 1만큼 키워서 메모리 재할당
-	p->terms = realloc(p->terms, sizeof(term_t) * (p->n_terms + 1)) ; 
+	p->terms = realloc(p->terms, sizeof(term_t) * (p->n_terms + 1)) ; // p->terms를 sizeof(term_t)*(n_terms+1)의 크기로 메모리 재할당
 	(p->terms[p->n_terms]).coef = coef ; // terms의 맨 끝에 계수 지수 집어넣어서 항 추가
 	(p->terms[p->n_terms]).exp = exp ;
 	p->n_terms += 1 ; // 항의 개수 +1
@@ -83,7 +85,7 @@ poly_t * poly_attach (poly_t * p, double coef, int exp) // 지수,계수 입력해서 항
 
 poly_t * poly_remove (poly_t * p, int exp) // 지수를 입력하고 그 지수의 항을 삭제
 {
-	//예외처리 - 만약 지수가 음수/ 최고차항보다 큰 지수 / 계수가 0인 지수가 입력되면 NULL 반환
+	//예외처리 - 만약 입력받은 지수가 <음수/ 최고차항보다 큰 지수 / 계수가 0>이면 NULL 반환
 	if (exp < 0)
 		return NULL ;
 	if (p->degree < exp)
@@ -98,12 +100,14 @@ poly_t * poly_remove (poly_t * p, int exp) // 지수를 입력하고 그 지수의 항을 삭�
 		i++ ;
 	}
 	// assert p->terms[i].exp == exp
-	// i가 삭제하려는 지수에 도착하면 그 때의 i값을
+	// i가 삭제하려는 지수에 도착하면 그 때의 i값을 사용
 
 //여기 for문에서 이용하여, 삭제하려는 지수보다 큰 지수들의 항을 한칸씩 앞으로 옮긴다
-	for ( ; i < p->n_terms - 1 ; i++) {
+	for ( /*여기는 비워두고*/ ; i < p->n_terms - 1 ; i++) {
 		p->terms[i] = p->terms[i + 1] ;
 	}
+
+	/*************여기도 중요!!******************/
 //앞으로 옮기고 난 후 메모리 크기 재할당하고 , 항의 개수도 1 줄인다.
 	p->terms = realloc(p->terms, (p->n_terms - 1) * sizeof(term_t)) ;
 	p->n_terms -= 1 ;

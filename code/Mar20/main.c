@@ -13,10 +13,15 @@ main ()
 	push(st, 12) ;
 	push(st, 13) ;
 	push(st, 14) ;
-	push(st, 15) ;
+	push(st, 15) ; // พ๊ดย push x 
 
-	pop(st, &data) ;
-	printf("%d\n", data) ;
+	for(int i=0; i<st->capacity; i++){
+	pop(st,&data);
+	printf("%d\n",data);
+	}
+
+	// pop(st, &data) ;
+	// printf("%d\n", data) ;
 
 	delete_stack(st) ;
 

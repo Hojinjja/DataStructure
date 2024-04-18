@@ -49,6 +49,7 @@ is_empty (stack_t * st)
 	return (st->size == 0) ;
 }
 
+
 int 
 is_full (stack_t * st) 
 {

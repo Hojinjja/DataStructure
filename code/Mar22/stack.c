@@ -78,6 +78,7 @@ get_elem (stack_t * stack, int index, int * elem)
 	if (stack->size <= index)
 		return 0 ;
 
+	//pop은 버퍼에서 빼버리는거고 , get_elem은 stack의 buffer에서 index에 위치한 값을 elem 위치에 넣는것. 
 	*elem = stack->buffer[index] ; // buffer의 index에 위치하는 요소를 elem에 반환
 	return 1 ;
 }

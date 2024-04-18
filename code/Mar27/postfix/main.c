@@ -11,7 +11,7 @@ main ()
 	stack_t * operands ;
 	operands = create_stack(100) ;
 
-	char tok[8] ;
+	char tok[8] ; //최대 8자리 
 	do {
 		print_stack(operands) ;
 
@@ -20,7 +20,7 @@ main ()
 		if (tok[0] == ';') 
 			break ;
 
-		if (isdigit(tok[0])) {
+		if (isdigit(tok[0])) { //만약 tok으로 들어온 값이 피연산자라면
 			int num = atoi(tok) ;
 			push(operands, num) ;
 		}

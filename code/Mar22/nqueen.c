@@ -96,6 +96,7 @@ int main ()
 		}
 
 		if (is_feasible(queens)) { // is_feasible이 1이라면 충돌x 이므로 
+			
 			if (get_size(queens) == 8) { // 만약 스택(queens)의 크기가 8로 꽉찼다면
 				for (int i = 0 ; i < 8 ; i++) {	
 					int queen ;
@@ -115,8 +116,8 @@ int main ()
 				top(queens, &latest_queen) ; // 마지막에 위치한 퀸의 위치를 latest_queen에 저장하고
 				push(queens, latest_queen + 1) ; // 다음 퀸을 latest_queen+1에 배치한다 
 			}
-		}
-		else { // 만약 퀸끼리 충돌한다면 
+
+		}else { // 만약 퀸끼리 충돌한다면 
 			int lastest_queen ; 
 			pop(queens, &latest_queen) ; // 마지막 퀸을 pop하고
 			push(queens, latest_queen + 1) ; // 그 퀸을 마지막 위치 +1에 push한다

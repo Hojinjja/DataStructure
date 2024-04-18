@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "stack.h"
+#include "gstack.h"
 
 stack_t * 
 create_stack (int capacity, int unit) 
@@ -27,7 +27,7 @@ push (stack_t * st, void * elem)
 	if (is_full(st))
 		return 0 ;
 
-	memcpy(st->buffer + ((st->size) * (st->unit)), elem, st->unit) ;
+	memcpy(st->buffer + ((st->size) * (st->unit)), elem, st->unit) ; // 중요 st->buffer + ((st->size) * (st->unit))에 elem을 st->unit크기로
 	st->size += 1 ;
 	return 1 ;
 }
@@ -37,8 +37,8 @@ pop (stack_t * st, void * elem)
 {
 	if (is_empty(st)) 
 		return 0 ;
-	
-	memcpy(elem, st->buffer + (st->size - 1) * st->unit, st->unit) ;
+
+	memcpy(elem, st->buffer + ((st->size - 1) * st->unit), st->unit) ; // 중요 elem에 st->buffer + ((st->size - 1) * st->unit)를 unit 크기로
 	st->size -= 1 ;
 	return 1 ;
 }
