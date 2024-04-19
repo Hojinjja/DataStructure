@@ -45,7 +45,8 @@ int insert_arrlist (arrlist_t * l, char * s)
 	if (l->size == l->arrlen - 1)
 		return 0 ;
 
-	//allocate an empty slot to store 's'
+
+	// allocate an empty slot to store s
 	int next = 1 ;
 	while (l->data[next] != NULL) { //넣을 공간이 비었는지 
 		next++ ;
@@ -68,7 +69,6 @@ int insert_arrlist (arrlist_t * l, char * s)
 	}
 
 	l->size++ ;
-
 	return 1 ;
 }
 
@@ -100,7 +100,7 @@ char * delete_arrlist (arrlist_t * l, char * s) //s를 찾아서 뺀다
 	char * r = l->data[i] ;
 	l->data[i] = NULL ;
 
-	if (i == l->first/*prev == 0*/) {
+	if (i == l->first /*prev == 0*/) {
 		l->first = l->link[i] ;
 	}
 	else {
