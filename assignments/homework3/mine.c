@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gqueue.h"
-
 typedef enum {
 		closed, marked, open
 	}
@@ -15,10 +14,10 @@ typedef struct {
 	}
 	cell_t  ; 
 
-typedef struct {
-	int x;
-	int y;
-} cell_coordinate ;
+// typedef struct {
+// 	int x;
+// 	int y;
+// } cell_coordinate ;
 
 
 int M, N, K ;
@@ -50,7 +49,7 @@ void load_board (char * filename)
 		board[y][x].state = closed;
 		// board[x][y].x = x;
 		// board[x][y].y = y;
-		printf("y:%d, x:%d, mine=%d\n", y,x, board[y][x].mined==1);
+		// printf("y:%d, x:%d, mine=%d\n", y,x, board[y][x].mined==1);
 	
     }
 	//지뢰 없는 칸의 초기 상태 저장
@@ -98,11 +97,12 @@ void count_mine_around(){
 
 
 void draw_board() {
+    
     int col, row;
     // 보드의 상단 테두리 출력
-    printf("x/y ");
+    printf("x/y-");
     for (col = 0; col < M; col++) {
-        printf("%d ", col);
+        printf("%d-", col);
     }
     printf("\n");
 
@@ -110,26 +110,23 @@ void draw_board() {
     for (row = 0; row < N; row++) {
         printf("%d ", row); // 행 번호 출력
         for (col = 0; col < M; col++) {
-            // 테두리 출력
-            if (col == 0) printf("| ");
-            // 보드 내용 출력
+            if (col == 0) printf("| ");// 테두리 
             if (board[row][col].state == closed) {
-                printf("@ ");
+                printf("* ");
             } else if (board[row][col].state == open) {
                 printf("%d ", board[row][col].num);
             } else if (board[row][col].state == marked) {
-                printf("^ ");
+                printf("F ");
             }
-            // 테두리 출력
-            if (col == M - 1) printf("|");
+            
         }
         printf("\n");
     }
 
     // 보드의 하단 테두리 출력
-    printf("    ");
+    printf("   ");
     for (col = 0; col < M; col++) {
-        printf("%d ", col);
+        printf("-%d", col);
     }
     printf("\n");
 }
@@ -159,7 +156,9 @@ int is_terminated() {
 
 
 void read_execute_userinput() {
+    printf("> command : (open/flag) x y \n");
     printf(">");
+    //refresh();
     char command[16];
     int y, x;
 
@@ -171,38 +170,46 @@ void read_execute_userinput() {
         exit(EXIT_FAILURE); // 지뢰가 있는 셀을 열려고 하면 게임 종료
     }
 
-    if (strcmp(command, "flag") == 0 && board[y][x].state == closed) {
-        board[y][x].state = marked; // 셀에 깃발 표시
-    } 
+    if (strcmp(command, "flag") == 0  ) {
+        if(board[y][x].state == marked){
+            board[y][x].state = closed;
+        }else if(board[y][x].state == closed){
+            board[y][x].state = marked;
+        }else{
+            printf(" already opened");
+            return ;
+        }; 
+    }
 	else if (strcmp(command, "open") == 0 && board[y][x].state == closed) {
         // 지뢰가 아닌 셀을 열기
-        gqueue_t *cells_to_bomb = create_queue(M * N, sizeof(cell_coordinate));
-        cell_coordinate s = {x, y};
-        enqueue(cells_to_bomb, &s);
+        gqueue_t *cells_to_bomb = create_queue(M * N, sizeof(int)*2);
+        int initial_cell[2] = {y, x};  // y와 x 인덱스를 배열에 저장
+        enqueue(cells_to_bomb, initial_cell); //
 
         while (!is_empty(cells_to_bomb)) {
-            cell_coordinate c;
-            dequeue(cells_to_bomb, &c);
+            int current_cell[2];
+            dequeue(cells_to_bomb, current_cell);
+            int cy = current_cell[0], cx = current_cell[1];
 
             // 이미 열려 있거나, 지뢰가 있는 경우 건너뛰기
-            if (board[c.y][c.x].state != closed || board[c.y][c.x].mined) continue;
+            if (board[cy][cx].state != closed || board[cy][cx].mined) continue;
 
             // 셀 상태를 열림으로 변경
-            board[c.y][c.x].state = open;
+            board[cy][cx].state = open;
 
             // 숫자가 0이면 주변 셀도 열기
-            if (board[c.y][c.x].num == 0) {
+            if (board[cy][cx].num == 0) {
                 int dx[8] = {-1, 1, 0, 0, -1, -1, 1, 1};
                 int dy[8] = {0, 0, -1, 1, -1, 1, -1, 1};
 
                 for (int d = 0; d < 8; d++) {
-                    int nx = c.x + dx[d];
-                    int ny = c.y + dy[d];
+                    int nx = cx + dx[d];
+                    int ny = cy + dy[d];
 
                     // 범위 내부이고 닫힌 상태이며 지뢰가 아닌 셀만 큐에 추가
                     if (nx >= 0 && nx < M && ny >= 0 && ny < N && board[ny][nx].state == closed && !board[ny][nx].mined) {
-                        cell_coordinate new_cell = {nx, ny};
-                        enqueue(cells_to_bomb, &new_cell);
+                         int new_cell[2] = {ny, nx};
+                        enqueue(cells_to_bomb, new_cell);
                     }
                 }
             }
@@ -225,6 +232,7 @@ int main (int argc, char ** argv)
 
 	 while (!is_terminated()) {
         count_mine_around();
+        system("clear");
         draw_board();
         read_execute_userinput();
     }
