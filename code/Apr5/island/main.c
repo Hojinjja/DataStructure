@@ -35,6 +35,7 @@ int remove_an_island ()
 		return 0 ;
 	}
 
+// 육지 1을 0으로 바꿀 queue -> cells_to_erase
 	gqueue_t * cells_to_erase = create_queue(X * Y, sizeof(cell_t)) ;
 
 	enqueue(cells_to_erase, &s) ;
@@ -45,15 +46,15 @@ int remove_an_island ()
 		map[c.y][c.x] = 0 ;
 
 
-		int dx[4] = {0, 0, -1, 1} ;
-		int dy[4] = {1, -1, 0, 0} ;
+		int dx[4] = {0, 0, -1, 1} ; // 상하좌우 x축 기준 상하(x축이동 0) , 좌우(x축 이동 +- 1)
+		int dy[4] = {1, -1, 0, 0} ; // 상하좌우 y축 기준 상하(x축이동 +-1) , 좌우(y축 이동 0)
 
 		for (int d = 0 ; d < 4 ; d++) {
 			cell_t a ;
-
+		//상하좌우 탐색
 			a.y = c.y + dy[d] ;
 			a.x = c.x + dx[d] ;
-
+		//상하좌우에 1(육지)가 있으면 cells_to_erase에 enqueue
 			if (0 <= a.y && a.y < Y && 0 <= a.x && a.x < X) {
 				if (map[a.y][a.x] == 1) {
 					enqueue(cells_to_erase, &a) ;
@@ -104,7 +105,7 @@ int main ()
 	}
 	fclose(fp) ;
 
-
+	int N; 
 	while (remove_an_island()) {
 		N++ ;
 	}
