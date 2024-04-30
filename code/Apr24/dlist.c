@@ -111,23 +111,55 @@ dlist_remove_last (dlist_t * l, void * e)
 }
 
 int 
-dlist_get (dlist_t * l, int pos, void * e)
+dlist_get (dlist_t * l, int index, void * e)
 /* 
  * copies the data at the given index ``index``, if exists, to ``e``, and returns 1.
  * if not exists, return 0.
  */
 {
 	/* TODO */
+	if (index <0 ){
+		return 0;
+	}
+	
+	node_t * n ;
+	n=l->right ; //첫번째 노드 
+	int i = 0;
+	for (i=0; i <index ; i++){
+		n = n->right;
+		if (n == l){
+			return 0; 
+		}
+	}
+
+	memcpy(e, n->element, *((int*)l->element)); // 헤더의 element에 크기를 넣어놓음. 
+	return 1;
 }
 
 int 
-dlist_remove_at (dlist_t * l, int pos)
+dlist_remove_at (dlist_t * l, int index)
 /*
  * removes the node at the given index ``index``, if exists, and returns 1.
  * if not exists, return 0.
  */
 {
 	/* TODO */
+	if (index <0 ){
+		return 0;
+	}
+	
+	node_t * n ;
+	n=l->right ; //첫번째 노드
+
+	int i = 0;
+	for (i=0; i <index ; i++){
+		n = n->right;
+		if (n == l){
+			return 0; 
+		}
+	}
+
+	dlist_remove(l, n);
 }
 
 int 
@@ -139,6 +171,21 @@ dlist_append (dlist * l1, dlist * l2)
 
 {
 	/*TODO*/
+	
+	node_t * i2;
+	for(i2 = l2->right; i2 !=l2 ; i2 = i2->right){
+		// dlist_insert_last(l1, i2->element);
+		node_t * _new = malloc(sizeof(node_t));
+		_new->element = malloc(sizeof(*((int*)(l2->element)))) ; 
+		memccpy(_new->element, i2->element, *((int*)l2->element));
+
+		_new->left = l1->left;
+		_new->right = l1;
+
+		l1->left->right = _new;
+		l1->left = _new;
+
+	} ; 
 }
 
 

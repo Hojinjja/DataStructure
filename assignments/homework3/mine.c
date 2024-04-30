@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gqueue.h"
+#include <time.h>
+#include "scoreboard.h"
+
 typedef enum {
 		closed, marked, open
 	}
@@ -13,11 +16,6 @@ typedef struct {
 		cell_state state ; 
 	}
 	cell_t  ; 
-
-// typedef struct {
-// 	int x;
-// 	int y;
-// } cell_coordinate ;
 
 
 int M, N, K ;
@@ -34,8 +32,8 @@ void load_board (char * filename)
 		exit(EXIT_FAILURE) ;
 	}
 
-	if (fscanf(fp, "%d %d %d", &M, &N, &K) != 3) { // M,N,K 저장 -> 저장 제대로 됐으면 각각 1 return 
-		fprintf(stderr, "File format error\n") ; //
+	if (fscanf(fp, "%d %d %d", &N, &M, &K) != 3) { 
+		fprintf(stderr, "File format error\n") ; 
 		exit(EXIT_FAILURE) ;
 	}
 
@@ -47,9 +45,6 @@ void load_board (char * filename)
         fscanf(fp, "%d %d", &y, &x);
         board[y][x].mined = 1;
 		board[y][x].state = closed;
-		// board[x][y].x = x;
-		// board[x][y].y = y;
-		// printf("y:%d, x:%d, mine=%d\n", y,x, board[y][x].mined==1);
 	
     }
 	//지뢰 없는 칸의 초기 상태 저장
@@ -57,8 +52,6 @@ void load_board (char * filename)
 		for(int y=0; y<M; y++){
 			if(board[y][x].mined!=0){
 				board[y][x].state=closed;
-				// board[x][y].x=x;
-				// board[x][y].y=y;
 			}
 		}
 
@@ -88,8 +81,7 @@ void count_mine_around(){
 					mine_count +=1;
 				}
 			}board[y][x].num=mine_count;
-				// printf("mine_count:%d ",mine_count);
-				// printf("board[%d][%d].num=%d\n",x,y,board[y][x].num );			
+						
 		}
 	}
 	
@@ -100,7 +92,7 @@ void draw_board() {
     
     int col, row;
     // 보드의 상단 테두리 출력
-    printf("x/y-");
+    printf("a/b-");
     for (col = 0; col < M; col++) {
         printf("%d-", col);
     }
@@ -150,14 +142,12 @@ int is_terminated() {
         }
     }
     // 모든 안전한 셀이 열렸거나 지뢰가 있는 셀만 표시되었을 때 종료
-    return open_safe_cells_count == total_safe_cells && marked_mines_count == K;
+    return open_safe_cells_count == total_safe_cells || marked_mines_count == K;
 }
 
-
-
 void read_execute_userinput() {
-    printf("> command : (open/flag) x y \n");
-    printf(">");
+    printf("> command : (open/flag/hint) a b \n");
+    printf("> ");
     //refresh();
     char command[16];
     int y, x;
@@ -176,9 +166,18 @@ void read_execute_userinput() {
         }else if(board[y][x].state == closed){
             board[y][x].state = marked;
         }else{
-            printf(" already opened");
+            printf(" already opened\n\n");
             return ;
         }; 
+    }
+    if (strcmp(command, "hint") == 0) {
+         if (board[y][x].mined == 1) {
+        printf("\nHint: (%d, %d) is mined.\n", y, x);
+        } else {
+        printf("\nHint: (%d, %d), there is no mine.\n", y, x);
+         }
+        getchar();
+        return;
     }
 	else if (strcmp(command, "open") == 0 && board[y][x].state == closed) {
         // 지뢰가 아닌 셀을 열기
@@ -216,6 +215,7 @@ void read_execute_userinput() {
         }
         delete_queue(cells_to_bomb); // 큐 메모리 해제
     }
+    system("clear");
 }
 	
 	
@@ -229,13 +229,19 @@ int main (int argc, char ** argv)
 	load_board(argv[1]) ;
 	printf("col:%d, row:%d, mine:%d\n", M,N,K);
 	
+    time_t start_time = time(NULL);
+
 
 	 while (!is_terminated()) {
         count_mine_around();
-        system("clear");
         draw_board();
         read_execute_userinput();
     }
 
+    time_t end_time = time(NULL);
+    record_and_display_timer("scoreboard.txt", start_time, end_time);
+
 	printf("WIN!!\n");
 }
+
+
