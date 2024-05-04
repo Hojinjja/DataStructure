@@ -74,10 +74,18 @@ dlist_insert_last (dlist_t * l, void * e)
 	dlist_insert(l->left, e, *((int *)(l->element))) ;
 }
 
+//insert_at
 int
 dlist_insert_at (dlist_t * l, int index, void * e)
 {
-	/* TODO */
+	node_t * i; 
+	i= l->right; 
+	for (int n=0 ; n==index ; n++ ) {
+
+		i = i->right; 
+	}
+	dlist_insert(i,e,*((int*)(l->element)));
+	
 }
 
 int
@@ -119,7 +127,12 @@ dlist_remove_last (dlist_t * l, void * e)
 int
 dlist_remove_at (dlist_t * l, int index, void * e)
 {
-	/* TODO */
+	node_t * i; 
+	i= l->right; 
+	for (int n=0 ; n==index ; n++ ) {
+		i = i->right; 
+	}
+	dlist_remove(l,i);
 }
 
 

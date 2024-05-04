@@ -1,11 +1,11 @@
-struct node {
+struct node { // node 구조체
 	void * element ;
 	struct node * left ; 
 	struct node * right ;
 } ;
 
-typedef struct node node_t ;
-typedef struct node dlist_t ;
+typedef struct node node_t ; // node 구조체의 node_t
+typedef struct node dlist_t ; // node 구조체의 또 다른 dlist_t
 
 dlist_t * 
 dlist_alloc (int unit)  ;

@@ -75,7 +75,25 @@ char * delete_llist (llist_t * l, char * s)
 
 void reverse_llist (llist_t * l)
 {
-	/*TODO*/
+	llist_node_t * i ;
+	llist_node_t * prev = NULL ; 
+	for (i = l->first ; i != NULL ; i = i->next){
+		if (i == l->first) {
+		l->first = i->next ;
+		}
+		else {
+		prev->next = i->next ;
+		}
+		//prev의 data에 i ㅔ이터 넘기기
+	}
+	
+
+	char * r ;
+	r = i->data ;
+	
+	free(i) ;
+
+	return r ;
 }
 
 

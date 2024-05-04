@@ -50,10 +50,10 @@ void
 dlist_insert (node_t * left, void * e, int unit)
 {
 	node_t * _new = (node_t *) malloc(sizeof(node_t)) ;
-	_new->element = malloc(unit) ;
-	memcpy(_new->element, e, unit) ;
+	_new->element = malloc(unit) ; // element 메모리 할당
+	memcpy(_new->element, e, unit) ; // element에 e를 unit 크기만큼 복사
 
-	node_t * right = left->right ;
+	node_t * right = left->right ; // right 노드는 new노드의 right가 될 부분 (아직 new가 삽입은 안된 상태이므로 left의 오른쪽에 right 노드)
 
 	_new->left = left ;
 	_new->right = right ;
@@ -65,13 +65,13 @@ dlist_insert (node_t * left, void * e, int unit)
 void
 dlist_insert_first (dlist_t * l, void * e)
 {
-	dlist_insert(l, e, *((int *)(l->element))) ;
+	dlist_insert(l, e, *((int *)(l->element))) ; // l의 오른쪽에 insert
 }
 
 void
 dlist_insert_last (dlist_t * l, void * e)
 {
-	dlist_insert(l->left, e, *((int *)(l->element))) ;
+	dlist_insert(l->left, e, *((int *)(l->element))) ; // l의 왼쪽의 오른쪽에 insert
 }
 
 int
@@ -80,7 +80,7 @@ dlist_remove (dlist_t * l, node_t * n)
 	if (l->left == l)
 		return 0 ;
 
-	n->left->right = n->right ;
+	n->left->right = n->right ; // 지울 노드 n
 	n->right->left = n->left ;
 
 	free(n->element) ;
@@ -117,7 +117,7 @@ dlist_get (dlist_t * l, int index, void * e)
 }
 
 void
-dlist_apply (dlist_t * l, void (* func)(void * e)) 
+dlist_apply (dlist_t * l, void (* func)(void * e)) // 적용시키기
 {
 	node_t * i ;
 

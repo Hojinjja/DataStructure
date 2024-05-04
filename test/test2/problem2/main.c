@@ -14,7 +14,9 @@ void print_element (void * e)
 
 void double_element (void * e)
 {
-	/* TODO */
+	dlist_t * a = (dlist_t *) e ;
+ 	int value =a->element ;
+	a->element = value * 2; 
 }
 
 

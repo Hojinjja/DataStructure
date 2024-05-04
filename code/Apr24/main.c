@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "dlist.h"
 
 void test1 () 
@@ -61,7 +60,7 @@ void test2 ()
 
 	dlist_append(l1, l2) ;
 
-	int n = dlist_len(l1) ;
+	int n = dlist_length(l1) ;
 	for (int i = 0 ; i < n ; i++) {
 		int data ;
 		dlist_get(l1, i, &data) ;
@@ -77,7 +76,7 @@ void test2 ()
 int main ()
 {
 	test1() ;
-	test2() ;
+	// test2() ;
 
 	return EXIT_SUCCESS ;
 }
