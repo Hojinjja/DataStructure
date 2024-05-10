@@ -51,30 +51,33 @@ int main ()
 	data = 7 ;
 	lalist_insert_at(l, 3, &data) ; // [4,,]->[1,6,7]->[2,3,]->[5,,]
 
-	// data = 8 ;
-	// lalist_insert_last(l, &data) ; // [4,,]->[1,6,7]->[2,3,]->[5,8,]
+	data = 8 ;
+	lalist_insert_last(l, &data) ; // [4,,]->[1,6,7]->[2,3,]->[5,8,]
+	printf("%d\n",data);
 
 	lalist_apply(l, print_element) ; 
 	printf("\n") ;
 
-	lalist_info(l) ;
+	lalist_info(l) ;  // 4 1 6 7 2 3 5 8
 
-	// lalist_remove_first(l, &data) ; // [1,6,7]->[2,3,]->[5,6,]
-	// lalist_remove_last(l, &data) ; //[1,6,7]->[2,3,]->[5,,]
-	// lalist_remove_last(l, &data) ; //[1,6,7]->[2,3,]
+	lalist_remove_first(l, &data) ; // [1,6,7]->[2,3,]->[5,6,]
+	printf("%d\n",data);
+	lalist_remove_last(l, &data) ; //[1,6,7]->[2,3,]->[5,,]
+	lalist_remove_last(l, &data) ; //[1,6,7]->[2,3,]
 
-	// lalist_apply(l, print_element) ; 
-	// printf("\n") ;
-	// lalist_info(l) ;
+	lalist_apply(l, print_element) ; 
+	printf("\n") ;
+	lalist_info(l) ; // 1 6 7 2 3
 
-	// data = 9; 
-	// lalist_insert_at(l,1,&data) ; // [1,9,]->[6,7 ,]->
-	// // lalist_pack(l) ;
-	// lalist_apply(l, print_element) ; 
-	// printf("\n") ;
-	// lalist_info(l) ;
+	data = 9; 
+	lalist_insert_at(l,1,&data) ; // [1,9,]->[6,7 ,]->  [2,3]
+	lalist_pack(l) ;
+	lalist_apply(l, print_element) ; 
+	printf("\n") ;
+	lalist_info(l) ; // 1 9 6 7 2 3
 
-	// lalist_free(l) ;
+	lalist_free(l) ;
+	printf("SUCCESS_\n") ;
 
 	return EXIT_SUCCESS ;
 }

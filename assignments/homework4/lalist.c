@@ -9,13 +9,11 @@ lalist_alloc (int arr_cap, int elem_size)
 	lalist_t * l = malloc(sizeof(lalist_t)) ;
 	l->arr_cap = arr_cap ;
 	l->elem_size = elem_size ;
-	l->first = NULL;
-	/*
 	l->first = malloc(sizeof(lalist_node_t)) ;
 	l->first->arr = calloc(elem_size, arr_cap) ;
 	l->first->n_elem = 0 ;
 	l->first->next = NULL ;
-	*/
+
 	return l ;
 }
 
@@ -100,7 +98,6 @@ void lalist_insert_last(lalist_t * l, void * e) {
     memcpy((char *)last->arr + last->n_elem * l->elem_size, e, l->elem_size);
     last->n_elem++;
 }
-
 int lalist_insert_at(lalist_t *l, int index, void *e) {
     if (index < 0 || index > lalist_length(l)) {  // 적절한 인덱스인지 검사
         return -1;
@@ -114,73 +111,72 @@ int lalist_insert_at(lalist_t *l, int index, void *e) {
     }
 
     lalist_node_t *current = l->first;
+    lalist_node_t *previous = NULL;
     int position = 0;
 
     // 삽입할 위치를 찾기 위해 순회
     while (current != NULL) {
         if (position <= index && index <= position + current->n_elem) {
-            if (current->n_elem == l->arr_cap) {  // 삽입할 노드가 가득 찼다면
-                // 새 노드 생성
+            // 삽입할 노드를 찾음.
+            if (current->n_elem == l->arr_cap) {  // 노드가 가득 찼다면 새 노드 추가
                 lalist_node_t *new_node = malloc(sizeof(lalist_node_t));
                 new_node->arr = calloc(l->arr_cap, l->elem_size);
                 new_node->n_elem = 0;
                 new_node->next = current->next;
                 current->next = new_node;
-
-                // 현재 노드의 마지막 요소를 새 노드의 첫 번째 위치로 이동
-                memcpy(new_node->arr, (char *)current->arr + (current->n_elem - 1) * l->elem_size, l->elem_size);
-                new_node->n_elem = 1;
-                current->n_elem--; // 현재 노드에서 마지막 요소 제거
+                // 데이터 이동
+                int moveCount = (current->n_elem + 1) / 2; // 현재 노드의 절반을 새 노드로 이동
+                memcpy(new_node->arr, (char *)current->arr + (current->n_elem - moveCount) * l->elem_size, moveCount * l->elem_size);
+                new_node->n_elem = moveCount;
+                current->n_elem -= moveCount;
             }
-
-            // 현재 노드에서 요소를 오른쪽으로 이동하여 새 요소를 삽입
-            for (int i = current->n_elem; i > index - position; --i) {
-                memcpy((char *)current->arr + i * l->elem_size, (char *)current->arr + (i - 1) * l->elem_size, l->elem_size);
-            }
-            memcpy((char *)current->arr + (index - position) * l->elem_size, e, l->elem_size);
-            current->n_elem++;
-
-            return 0;
+            break;
         }
         position += current->n_elem;
+        previous = current;
         current = current->next;
     }
 
-    return -1; // 삽입 위치를 찾지 못한 경우
+    // 현재 노드에서 요소를 오른쪽으로 이동하여 새 요소를 삽입
+    for (int i = current->n_elem; i > index - position; --i) {
+        memcpy((char *)current->arr + i * l->elem_size, (char *)current->arr + (i - 1) * l->elem_size, l->elem_size);
+    }
+    memcpy((char *)current->arr + (index - position) * l->elem_size, e, l->elem_size);
+    current->n_elem++;
+
+    return 0;
 }
 
 
 
-
-int 
-lalist_remove_first (lalist_t * l, void * e)
-{
-	/* TODO */ 
-    // 배열이 모두 비어있는 경우. 
-    if(l->first ==NULL) {
-        return 0;
+int lalist_remove_first(lalist_t *l, void *e) {
+    if (l->first == NULL || l->first->n_elem == 0) {
+        return -1; // 리스트가 비어 있거나 첫 번째 노드의 요소 수가 0인 경우 실패 반환
     }
 
-    //첫 번째 요소 e에 복사.
-    memcpy(e,l->first->arr, l->elem_size);
-    //첫 번째 노드의 요소 수 1 감소
-    l->first->n_elem -=1; 
+    // 첫 번째 요소를 e에 복사
+    memcpy(e, l->first->arr, l->elem_size);
 
-    //요소가 남아 있지 않은 경우 노드 제거. 
-    if(l->first->n_elem == 0){
-        lalist_node_t * temp_node = l->first;
+    // 첫 번째 노드의 요소 수 감소
+    l->first->n_elem--;
+
+    if (l->first->n_elem == 0) {
+        // 요소가 모두 삭제되었으면 첫 번째 노드를 삭제하고 메모리 해제
+        lalist_node_t *temp_node = l->first;
         l->first = l->first->next;
         free(temp_node->arr);
         free(temp_node);
+    } else {
+        // 요소가 남아있다면 배열의 요소들을 왼쪽으로 한 칸씩 이동
+        memmove(l->first->arr, (char *)l->first->arr + l->elem_size, l->elem_size * l->first->n_elem);
+        // 배열의 끝 부분을 초기화
+        memset((char *)l->first->arr + l->first->n_elem * l->elem_size, 0, l->elem_size);
     }
-    //지우고도 배열에 요소가 남아있으면, 배열에 남아있는 요소들 한 칸 씩 앞으로 당긴다. 
-    else{
-        memmove(l->first->arr, (char*) l->first->arr + l->elem_size, l->first->n_elem * l->elem_size);
-    }
 
-
-
+    return 0; // 성공적으로 요소 제거
 }
+
+
 
 int
 lalist_remove_last (lalist_t * l, void * e)
@@ -274,33 +270,43 @@ lalist_info (lalist_t * l) // 채점용
 	printf("========\n") ;
 }
 
+void lalist_pack(lalist_t *l) {
+    if (!l || !l->first) return; // No nodes to pack
 
-///??
-void lalist_pack(lalist_t *l) { // ?
-    lalist_node_t * current = l->first;
-    lalist_node_t * previous = NULL; 
+    lalist_node_t *current = l->first;
+    lalist_node_t *next = current->next;
 
-    while (current != NULL) {
-        int empty_space = l->arr_cap - current->n_elem; // 현재 배열의 빈 자리
-        if (empty_space > 0) {
-            int filled_index = 0; // 앞에서부터 채워질 인덱스
-            // 빈 자리를 찾아 앞으로 요소들을 한 칸씩 옮깁니다.
-            for (int i = 0; i < current->n_elem; i++) {
-                    if (*(int *)((char *)current->arr + i * l->elem_size) != 0)
-                    memcpy((char *)current->arr + filled_index * l->elem_size, (char *)current->arr + i * l->elem_size, l->elem_size);
-                    filled_index++;
-                }
-            }
-            
+    while (current && next) {
+        while (current->n_elem < l->arr_cap && next->n_elem > 0) {
+            // Move the first element of the next node to the current node
+            memcpy((char *)current->arr + current->n_elem * l->elem_size,
+                   next->arr,
+                   l->elem_size);
+            current->n_elem++;
+
+            // Shift all elements in the next node left
+            memmove(next->arr,
+                    (char *)next->arr + l->elem_size,
+                    (next->n_elem - 1) * l->elem_size);
+            next->n_elem--;
+
+            // Clean the residual space in next node
+            memset((char *)next->arr + next->n_elem * l->elem_size, 0, l->elem_size);
         }
-    current = l->first;
-    while (current != NULL){
-        lalist_node_t * previous = NULL;
 
-
+        // If after transferring elements, next node is empty, remove it
+        if (next->n_elem == 0) {
+            current->next = next->next;
+            free(next->arr);
+            free(next);
+            next = current->next; // Move to the next valid node
+        } else {
+            // Move to the next node to continue packing
+            current = next;
+            next = current->next;
         }
     }
-
+}
     
     //첫번째 배열부터 빈 공간이 있는지 확인. 
     //빈 공간이 있다면 빈 공간의 뒤에서부터 한 칸씩 앞으로 당긴다. 
