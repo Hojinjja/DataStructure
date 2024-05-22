@@ -32,7 +32,7 @@ tree_add_child (tree_t * parent, tree_t * child)
 }
 
 tree_t *
-tree_search (node_t * t, char key)
+tree_search (tree_t * t, char key)
 {
 	/*TODO*/
 	if(t->data ==key){

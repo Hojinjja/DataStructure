@@ -15,11 +15,9 @@ void print_element (void * e)
 void double_element (void * e)
 {
 	/* TODO */
-	void double_element(void * e) {
     int *value; 
     value = (int *) e; // int 포인터로 형 변환
     *value = *value * 2; // 가리키는 값에 2를 곱하여 저장
-}
 }
 
 
@@ -53,7 +51,7 @@ int main ()
 
 	data = 8 ;
 	lalist_insert_last(l, &data) ; // [4,,]->[1,6,7]->[2,3,]->[5,8,]
-	printf("%d\n",data);
+	// printf("%d\n",data);
 
 	lalist_apply(l, print_element) ; 
 	printf("\n") ;
@@ -61,7 +59,7 @@ int main ()
 	lalist_info(l) ;  // 4 1 6 7 2 3 5 8
 
 	lalist_remove_first(l, &data) ; // [1,6,7]->[2,3,]->[5,6,]
-	printf("%d\n",data);
+	// printf("%d\n",data);
 	lalist_remove_last(l, &data) ; //[1,6,7]->[2,3,]->[5,,]
 	lalist_remove_last(l, &data) ; //[1,6,7]->[2,3,]
 
@@ -77,7 +75,6 @@ int main ()
 	lalist_info(l) ; // 1 9 6 7 2 3
 
 	lalist_free(l) ;
-	printf("SUCCESS_\n") ;
 
 	return EXIT_SUCCESS ;
 }
