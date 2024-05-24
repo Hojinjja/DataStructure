@@ -16,6 +16,7 @@ bintree_create (char data)
 bintree_t *
 bintree_add_left (bintree_t * parent, bintree_t * child)
 {
+	parent->left = child ;
 	parent->left = child;
 }
 
