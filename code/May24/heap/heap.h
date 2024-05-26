@@ -25,3 +25,6 @@ heap_pop (heap_t * heap, void * buf) ;
 
 int
 heap_push (heap_t * heap, void * buf) ;
+
+// slist.h와 동일하게 생김 -> heap은 개념 자체가 priority queue와 같음. 
+// push와 pop만 차이남
