@@ -7,8 +7,7 @@ heap_t *
 heap_create (int capacity, size_t usize, int (* cmp)(void *e1, void *e2)) 
 {
 	heap_t * h = malloc(sizeof(heap_t)) ;
-	h->arr = calloc(capacity + 1, usize) ; 
-	//capacity +1을 해준다 (힙에서는 0번 주소 사용 x = 부모-자식 관계 찾기 쉽게 하기 위해)
+	h->arr = calloc(capacity + 1, usize) ;
 	h->capacity = capacity ;
 	h->size = 0 ;
 	h->usize = usize ;
@@ -38,7 +37,7 @@ parent (int i)
 int
 left (int i) 
 { 
-	return i * 2 ; //i번째 left 노드는 i*2에 존재.
+	return i * 2 ; 
 }
 
 int
@@ -48,13 +47,13 @@ right (int i)
 }
 
 void *
-arr (heap_t * h, int i) 
+arr (heap_t * h, int i)
 {
 	return h->arr + h->usize * i ;
 }
 
 void
-swap (heap_t * h, int a, int b) // index a와 b를 교환 
+swap (heap_t * h, int a, int b)
 {
 	char * tmp = (char *) malloc(h->usize) ;
 	memcpy(tmp, arr(h, a), h->usize) ;
@@ -64,7 +63,7 @@ swap (heap_t * h, int a, int b) // index a와 b를 교환
 }
 
 int
-cmp (heap_t * h, int a, int b) //compare 하는 코드 
+cmp (heap_t * h, int a, int b)
 {
 	return h->cmp(h->arr + a * h->usize, h->arr + b * h->usize) ;
 }
@@ -74,22 +73,23 @@ heap_top (heap_t * h, void * buf)
 {
 	if (h->size == 0)
 		return 0 ;
-	memcpy(buf, arr(h, 1), h->usize) ; // 1번 위치를 memcpy
+	memcpy(buf, arr(h, 1), h->usize) ;
 	return 1 ;
 }
 
 int
 heap_pop (heap_t * h, void * buf)
 {
+	/* FIXME: fix this function for Task 1 */
+
 	if (h->size == 0)
 		return 0 ;
-//root날라가고 맨 마지막 요소를 root에 집어넣고 복사해서 가져옴
-	memcpy(buf, arr(h, 1), h->usize) ; //일단 root 복사
 
-	swap(h, 1, h->size) ;//마지막 요소 root로 올리고 
+	memcpy(buf, arr(h, 1), h->usize) ;
+
+	swap(h, 1, h->size) ;
 	h->size-- ;
 
-//중요 부분. 
 	int i = 1 ;
 	while ((left(i) <= h->size && cmp(h, i, left(i)) > 0) || 
 		right(i) <= h->size && cmp(h, i, right(i)) > 0) {
@@ -103,15 +103,26 @@ heap_pop (heap_t * h, void * buf)
 
 		i = r ;
 	}
+	// 사이즈 재 조정 
+    if (h->size > 0 && h->size < h->capacity / 4) {
+        h->capacity /= 2;
+        h->arr = realloc(h->arr, (h->capacity + 1) * h->usize);
+    }
+
 	return 1 ;
 }
 
 int
-heap_push (heap_t * h, void * buf) //인덱스 1번부터 쓰고 있다는 것을 유념
+heap_push (heap_t * h, void * buf) 
 {
-	if (h->size == h->capacity) { 
-		return 0 ;
-	}
+	/* FIXME: fix this function for Task 1 */
+
+	//사이즈 재조정
+	if (h->size == h->capacity) {
+        // Double the capacity if the heap is full
+        h->capacity *= 2;
+        h->arr = realloc(h->arr, (h->capacity + 1) * h->usize);
+    }
 
 	h->size += 1 ;
 	memcpy(arr(h, h->size), buf, h->usize) ;
@@ -129,5 +140,43 @@ heap_push (heap_t * h, void * buf) //인덱스 1번부터 쓰고 있다는 것을 유념
 	return 1 ;
 }
 
+int 
+heap_remove (heap_t * h, void * buf)
+{
+	int i;
+	// 만약 element가 없다면 종료
+    if (i > h->size) {
+        return 0;
+    }
 
-//segmentation fault 잡는 법 -> gcc -g -fsanitize=adress *.c 
+    // 삭제할 element의 index 찾기 
+    for (i = 1; i <= h->size; i++) {
+        if (h->cmp(arr(h, i), buf) == 0) {
+            break;
+        }
+    }
+
+    // 삭제할 element와 마지막 element와 위치 바꾸고, 사이즈 줄이기 
+	swap(h, i, h->size);
+    h->size--;
+
+    // min_heap으로 다시 만들기 
+    while ((left(i) <= h->size && cmp(h, i, left(i)) > 0) || 
+           (right(i) <= h->size && cmp(h, i, right(i)) > 0)) {
+
+        int r = left(i);
+        if (right(i) <= h->size && cmp(h, left(i), right(i)) < 0) {
+            r = right(i);
+        }
+
+        swap(h, i, r);
+        i = r;
+    }
+
+    return 1;
+}
+
+//task 1,2 끝
+
+	
+

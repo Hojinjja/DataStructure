@@ -50,16 +50,18 @@ slist_pop (slist_t * h, void * buf)
 {
 	if (h->size == 0)
 		return 0 ;
-	/* TODO */
-	memcpy(buf, h->arr, h->usize);
-	int p = 0;
-	
-	for(p=0; p <h->size-1; p++){
-		memcpy(h->arr + p*h->size,	//2번 인자에서 1번 인자로 옮김
-			  	h->arr+(p+1)*h->size,
-				h->usize);
+
+
+	memcpy(buf, h->arr, h->usize) ;
+
+	int i = 0 ;
+	for (i = 0 ; i < h->size - 1 ; i++) {
+		memcpy(	h->arr + i * h->usize, //2번 인자에서 1번 인자로 옮김
+			h->arr + (i + 1) * h->usize,
+			h->usize) ;
 	}
-	h->size = h->size-1;
+	h->size = h->size - 1 ;
+
 	return 1 ;
 }
 
@@ -68,7 +70,6 @@ slist_push (slist_t * h, void * buf) //순서 관계를 맞춰야함.
 {
 	if (h->size == h->capacity) 
 		return 0 ;
-
 	
 	int p = 0 ; // 새로운 element가 들어갈 위치 
 	for (p = 0 ; p < h->size ; p++) {
@@ -77,20 +78,17 @@ slist_push (slist_t * h, void * buf) //순서 관계를 맞춰야함.
 			break ;
 		}
 	}
+	/* 한 칸씩 미룬다. shift each i-th element to (i+1)-th index from p */
 
-	memcpy(h->arr + p*h->usize, buf, h->usize);
-	h->size++;
-
-	/* TODO */
-	//한 칸씩 미룬다. 
-	int i ; 
-	for (i=h->size; i > p ; i-- ){
-		memcpy(h->arr + i*h->usize,
-		h->arr + (i-1) * h->usize,
-		h->usize);
+	int i ;
+	for (i = h->size ; i > p ; i--) {
+		memcpy(	h->arr + i * h->usize, 
+			h->arr + (i - 1) * h->usize,
+			h->usize) ;
 	}
-	memcpy(h->arr + p *h->usize, buf, h->usize);
-	h->size ++ ;
+
+	memcpy(h->arr + p * h->usize, buf, h->usize) ;
+	h->size++ ;
 
 	return 1 ;
 }

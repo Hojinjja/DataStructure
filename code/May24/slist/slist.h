@@ -4,9 +4,9 @@ typedef struct {
 	int size ;
 	size_t usize ;
 
-	int (* cmp)(void *e1, void *e2) ;
+	int (* cmp)(void *e1, void *e2) ; //cmp=compare /function pointer 
 
-} slist_t ;
+} slist_t ; //sorted list , priority queue (element가 크기 순서로 저장, 작은 ->큰 )
 
 slist_t *
 slist_create (int capacity, size_t usize, int (* cmp)(void *e1, void *e2)) ;

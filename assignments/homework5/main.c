@@ -1,33 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "slist.h"
+#include "heap.h"
 
-int string_cmp (void *e1, void *e2)
+int 
+string_cmp (void *e1, void *e2)
 {
 	char *s1 = *((char **)e1) ;
 	char *s2 = *((char **)e2);
 	return strcmp(s1, s2) ;
 }
 
-int main ()
+int 
+main ()
 {
 	char * inputs[7] = {"necessary", "correct", "absent", "type", "because", "further", 0x0} ;
 	int i ;
 
-	slist_t * l = slist_create(6, sizeof(char *), string_cmp) ;
+	heap_t * h = heap_create(6, sizeof(char *), string_cmp) ;
 
 	for (i = 0 ; inputs[i] != 0x0 ; i++) {
-		slist_push(l, &(inputs[i])) ;
+		heap_push(h, &(inputs[i])) ;
 	}
 
-	while (slist_size(l) > 0) {
+	while (heap_size(h) > 0) {
 		char * s = 0x0 ;
-		slist_pop(l, &s) ; // popÇÒ ¶§ ¾ËÆÄºª ¼ø¼­·Î ÆË
+		heap_pop(h, &s) ;
 		printf("%s\n", s) ;
 	}
-
-	slist_free(l) ;
 
 	return 0 ;
 }
