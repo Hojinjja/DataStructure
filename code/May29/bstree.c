@@ -82,14 +82,62 @@ bst_insert (bst_t * t, void * data)
 int
 bst_remove (bst_t * t, void * data)
 {
-	bst_node_t * n ;
+	bst_node_t * n ; // 지우려는 노드 n 
 	n = _bst_search(t, data) ;
 	if (n == NULL || t->cmp(n->data, data) != 0) 
 		return 0 ;
 
+/*TODO*/
+	if(n->left = NULL){ // 지우려는 노드의 left가 NULL인 경우
+		// n->parent ->XXX = n->right; => 경우의 수가 3개임 
+		if(n->parent == NULL){
+			t->root = n->right ; 
+		}
+		if(n->parent->left == n){
+			n->parent->left = n->right;
+		}
+		else{ /*n ->parent->right ==n*/
+			n->parent->right = n->right;
+		}
 
-	/*TODO*/
+		free(n->data);
+		free(n);
+		return 1;
+	}
+	/*assume (n->left != NULL)*/
+	/*max_left 찾기*/
 
+	bst_node_t * lmax = n->left ; // lmax는 right_child가 NULL인 node까지 
+	
+	while(n->left->right != NULL){
+		lmax= lmax->right;
+	} //여기까지 통과되면 lmax->right는 NULL인 상황 
+
+	lmax->parent->right = lmax->left; //lmax->left도 NULL이면 lmax->parent는 자식이 없어지는 것 
+	lmax->left = NULL;
+	
+	lmax->parent = n->parent;
+
+	if(n->parent ==NULL){
+		t->root = lmax;
+	}
+	else if (n->parent->left == n){
+		n->parent->left = lmax;
+	}
+	else /*(n->parent=>right ==n)*/{
+		n->parent ->right =lmax;
+	}
+
+	lmax->left = n->left;
+	if(n->left!=NULL){
+		n->left->parent = lmax;
+	}
+
+	lmax->right = n->right;
+	if(n->right != NULL){
+		n->right->parent=lmax;
+	} 
+	
 	return 1 ;
 }
 
