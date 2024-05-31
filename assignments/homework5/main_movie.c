@@ -12,6 +12,21 @@ typedef struct {
 	} 
 	movie_t ;
 
+int
+movie_cmp(void *e1,void *e2)
+{
+    movie_t *m1 = (movie_t*)e1;
+    movie_t *m2 = (movie_t*)e2;
+
+    if(m1->year != m2->year){
+        return m1->year - m2->year;
+    }
+    if(m1->month != m2->month){
+        return m1->month - m2->month;
+    }
+    return strcmp(m1->title, m2->title);
+}
+
 
 movie_t movies[] = {
     {"G.I. Joe: Retaliation", 2013, 3},
@@ -62,18 +77,29 @@ movie_t movies[] = {
     {"Wild Child", 2008, 8},
     {"The Prestige", 2006, 10},
     {"The Visit", 2015, 9},
-    {"The Christmas Candle", 2013, 11}
+    {"The Christmas Candle", 2013, 11},
     {"Hugo", 2011, 11}
 } ;
 
 int 
 main ()
 {
-
 	// print out the movies in ''movies'' in ascending order. 
 	// A movie precedes another movie if it released earlier than the other one. 
 	// Or, if both released at the same month, a movie precedes the other one if its title lexicographically precedes.
 	
+    heap_t * h = heap_create(49, sizeof(movie_t),movie_cmp);
+
+    for(int i = 0; i< sizeof(movies)/sizeof(movies[0]); i++){
+        heap_push(h, &(movies[i]));
+    }
+
+    while (heap_size(h) > 0) {
+        movie_t movie;
+        heap_pop(h, &movie);
+        printf(" (%d.%02d) : %s\n", movie.year, movie.month, movie.title);
+    }
+
 	/*TODO: revise this function for Task 3*/
 
 	return 0 ;

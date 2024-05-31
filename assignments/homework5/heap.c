@@ -68,6 +68,7 @@ cmp (heap_t * h, int a, int b)
 	return h->cmp(h->arr + a * h->usize, h->arr + b * h->usize) ;
 }
 
+
 int
 heap_top (heap_t * h, void * buf)
 {
@@ -76,6 +77,7 @@ heap_top (heap_t * h, void * buf)
 	memcpy(buf, arr(h, 1), h->usize) ;
 	return 1 ;
 }
+
 
 int
 heap_pop (heap_t * h, void * buf)
@@ -106,7 +108,7 @@ heap_pop (heap_t * h, void * buf)
 
 		i = r ;
 	}
-	// 사이즈 재 조정 
+	// 사이즈 재 조정 --추가  
     if (h->size > 0 && h->size < h->capacity / 4) {
         h->capacity /= 2;
         h->arr = realloc(h->arr, (h->capacity + 1) * h->usize);
@@ -122,7 +124,7 @@ heap_push (heap_t * h, void * buf)
 
 	//사이즈 재조정
 	if (h->size == h->capacity) {
-        // Double the capacity if the heap is full
+        // 사이즈 재 조정 . 
         h->capacity *= 2;
         h->arr = realloc(h->arr, (h->capacity + 1) * h->usize);
     }
